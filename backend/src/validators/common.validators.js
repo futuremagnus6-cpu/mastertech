@@ -217,18 +217,18 @@ const optionalArray = (field, { minLen, maxLen } = {}) => {
   return chain;
 };
 
-/** GSTIN format (Indian) */
+/** GSTIN format (Indian) — optional, skips empty/null/undefined */
 const gstin = (field = 'gstin') =>
   body(field)
-    .optional({ values: 'null' })
+    .optional({ values: 'falsy' })
     .trim()
     .matches(/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/)
     .withMessage('Invalid GSTIN format');
 
-/** PAN format (Indian) */
+/** PAN format (Indian) — optional, skips empty/null/undefined */
 const pan = (field = 'pan') =>
   body(field)
-    .optional({ values: 'null' })
+    .optional({ values: 'falsy' })
     .trim()
     .matches(/^[A-Z]{5}\d{4}[A-Z]{1}$/)
     .withMessage('Invalid PAN format');

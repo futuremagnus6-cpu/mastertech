@@ -116,11 +116,9 @@ const verifyWhatsAppValidator = [
 const submitEnquiryValidator = [
   requiredString('name', { min: 1, max: 200 }),
   requiredEmail('email'),
-  requiredPhone('phone'),
-  requiredString('subject', { min: 1, max: 200 }),
+  optionalPhone('phone'),
+  optionalString('company', { max: 200 }),
   requiredString('message', { min: 1, max: 5000 }),
-  optionalString('shopName', { max: 200 }),
-  optionalString('businessType', { max: 100 }),
   validate,
 ];
 

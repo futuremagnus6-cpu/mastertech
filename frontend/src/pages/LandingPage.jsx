@@ -581,7 +581,7 @@ export default function LandingPage() {
   ];
 
   const testimonials = [
-    { quote: 'Magnus OS transformed how we manage our retail chain. Inventory sync across branches is seamless, and the analytics dashboard gives us insights we never had before.', author: 'Rajesh Kumar', role: 'CEO, MegaMart India' },
+    { quote: 'Magnus OS transformed how we manage our retail chain. Inventory sync across branches is seamless, and the analytics dashboard gives us insights we never had before.', author: 'Rakesh Kumar', role: 'Shop ,Riyansh Pvt Ltd  India' },
     { quote: 'The POS terminal is incredibly fast. Even during peak hours, it handles hundreds of transactions without a hitch. The barcode scanner integration saved us hours daily.', author: 'Priya Sharma', role: 'Operations Manager, FreshFarms' },
     { quote: 'Setting up our subscription plans and loyalty program was a breeze. Our customer retention improved by 40% in just three months.', author: 'Amit Patel', role: 'Founder, StyleHouse' },
   ];

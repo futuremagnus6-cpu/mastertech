@@ -84,6 +84,9 @@ export default function SignupPage() {
     if (!form.adminName.trim()) { toast.error('Please enter your name'); return false; }
     if (!form.adminEmail.trim() || !/\S+@\S+\.\S+/.test(form.adminEmail)) { toast.error('Please enter a valid admin email'); return false; }
     if (!form.password || form.password.length < 6) { toast.error('Password must be at least 6 characters'); return false; }
+    if (!/[A-Z]/.test(form.password)) { toast.error('Password must contain at least one uppercase letter'); return false; }
+    if (!/[a-z]/.test(form.password)) { toast.error('Password must contain at least one lowercase letter'); return false; }
+    if (!/[0-9]/.test(form.password)) { toast.error('Password must contain at least one number'); return false; }
     if (form.password !== form.confirmPassword) { toast.error('Passwords do not match'); return false; }
     return true;
   };
@@ -132,7 +135,14 @@ export default function SignupPage() {
         window.location.href = '/';
       }, 3000);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed. Please try again.');
+      const backendErrors = err.response?.data?.errors;
+      if (backendErrors && backendErrors.length > 0) {
+        // Show the first field error to the user
+        const fieldError = backendErrors[0];
+        toast.error(fieldError.message || 'Validation failed');
+      } else {
+        toast.error(err.response?.data?.message || 'Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -255,6 +265,9 @@ export default function SignupPage() {
                         required
                         minLength={6}
                       />
+                      <p className="text-xs text-gray-400 mt-1.5">
+                        Must contain uppercase, lowercase, and a number
+                      </p>
                       <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                         {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
                       </button>
