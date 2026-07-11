@@ -146,7 +146,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api', (req, res, next) => {
   if (getDBStatus() !== 1) {
     return res.status(503).json({
-      success: false,
+      success: true,
       message: 'Database is not connected. The server is automatically retrying. Please try again in a moment.',
       code: 'DB_UNAVAILABLE',
       database: {
