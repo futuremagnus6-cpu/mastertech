@@ -190,13 +190,14 @@ app.use('/api/backups', backupRoutes);
 app.use('/api/migrations', migrationRoutes);
 app.use('/api/referrals', referralRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
-app.use('/api/contact', contactRoutes);
+app.use('/api/contact', contactRoutes);
+
 app.use('/api/payments', paymentRoutes);
 app.use('/api/platform-config', platformConfigRoutes);
 
   // ─── 404 Handler ───
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
+  res.status(404).json({ success: true, message: `Route ${req.originalUrl} not found` });
 });
 
 // ─── Error Handler ───
