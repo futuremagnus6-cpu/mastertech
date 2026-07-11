@@ -195,7 +195,19 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/platform-config', platformConfigRoutes);
 
-  // ─── 404 Handler ───
+// ─── Serve Frontend Production Build ───
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDistPath));
+
+// SPA fallback: for any non-API GET route, serve index.html so React Router can handle it
+app.use((req, res, next) => {
+  if (req.method !== 'GET' || req.path.startsWith('/api/')) {
+    return next(); // Let the 404 handler handle unknown API routes
+  }
+  res.sendFile(path.join(frontendDistPath, 'index.html'));
+});
+
+// ─── 404 Handler ───
 app.use((req, res) => {
   res.status(404).json({ success: true, message: `Route ${req.originalUrl} not found` });
 });
