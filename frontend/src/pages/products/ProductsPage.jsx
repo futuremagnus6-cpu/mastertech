@@ -282,10 +282,9 @@ export default function ProductsPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <div><h1 className="text-2xl font-bold">Products</h1><p className="text-sm text-gray-500 mt-1">{total} total products</p></div>
-        <div className="flex items-center gap-2">
-          <button onClick={handleExport} className="btn-secondary flex items-center gap-2"><FiDownload className="w-4 h-4" />Export</button>
+      <div className="page-header">          <div className="min-w-0"><h1 className="text-xl sm:text-2xl font-bold break-words">Products</h1><p className="text-sm text-gray-500 mt-1">{total} total products</p></div>
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap flex-shrink-0">
+          <button onClick={handleExport} className="btn-secondary p-2 sm:px-4" title="Export"><FiDownload className="w-4 h-4" /><span className="hidden sm:inline ml-1.5">Export</span></button>
           <input type="file" id="importCsv" accept=".csv,.xlsx,.json" className="hidden" onChange={async (e) => {
             if (!e.target.files?.[0]) return;
             const fd = new FormData();
@@ -316,9 +315,9 @@ export default function ProductsPage() {
               e.target.value = '';
             }
           }} />
-          <label htmlFor="importCsv" className="btn-secondary flex items-center gap-2 cursor-pointer"><FiUpload className="w-4 h-4" />Import</label>
-          <button onClick={() => setShowImportUrl(true)} className="btn-secondary flex items-center gap-2"><FiGlobe className="w-4 h-4" />Import URL</button>
-          <button onClick={() => { setEditingProduct(null); setModalOpen(true); }} className="btn-primary flex items-center gap-2"><FiPlus className="w-4 h-4" />Add Product</button>
+          <label htmlFor="importCsv" className="btn-secondary p-2 sm:px-4 cursor-pointer" title="Import"><FiUpload className="w-4 h-4" /><span className="hidden sm:inline ml-1.5">Import</span></label>
+          <button onClick={() => setShowImportUrl(true)} className="btn-secondary p-2 sm:px-4" title="Import URL"><FiGlobe className="w-4 h-4" /><span className="hidden sm:inline ml-1.5">Import URL</span></button>
+          <button onClick={() => { setEditingProduct(null); setModalOpen(true); }} className="btn-primary p-2 sm:px-4" title="Add Product"><FiPlus className="w-4 h-4" /><span className="hidden sm:inline ml-1.5">Add Product</span></button>
         </div>
       </div>
 

@@ -105,8 +105,8 @@ export default function ExpensesPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <div><h1 className="text-2xl font-bold">Expenses</h1><p className="text-sm text-gray-500 mt-1">{total} total expenses · ₹{totalAmount.toLocaleString('en-IN')}</p></div>
-        <button onClick={() => { setEditExpense(null); setShowModal(true); }} className="btn-primary flex items-center gap-2"><FiPlus className="w-4 h-4" /> New Expense</button>
+        <div className="min-w-0"><h1 className="text-xl sm:text-2xl font-bold break-words">Expenses</h1><p className="text-sm text-gray-500 mt-1">{total} total expenses · ₹{totalAmount.toLocaleString('en-IN')}</p></div>
+        <button onClick={() => { setEditExpense(null); setShowModal(true); }} className="btn-primary p-2 sm:px-4 flex items-center gap-1.5 sm:gap-2 flex-shrink-0"><FiPlus className="w-4 h-4" /><span className="hidden sm:inline">New Expense</span></button>
       </div>
       <div className="mb-4 flex gap-3">
         <div className="relative flex-1"><FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" /><input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} placeholder="Search expenses..." className="input-field pl-9 py-2" /></div>

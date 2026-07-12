@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const { validate } = require('../middleware/validate');
 const {
   requiredString, optionalString, requiredEmail, optionalEmail,
-  requiredPhone, optionalPhone, optionalEnum, requiredEnum,
+  requiredPhone, optionalEnum, requiredEnum,
   password, optionalObject,
 } = require('./common.validators');
 
@@ -37,29 +37,54 @@ const updatePermissionsValidator = [
 const EMPLOYEE_ROLES = ['manager', 'cashier', 'sales', 'delivery', 'other'];
 
 const createEmployeeValidator = [
-  requiredString('name', { min: 2, max: 100 }),
+  optionalString('name', { max: 100 }),
   optionalEmail('email'),
-  requiredPhone('phone'),
-  requiredString('position', { max: 100 }),
-  requiredEnum('role', EMPLOYEE_ROLES),
+  optionalString('phone', { max: 20 }),
+  optionalString('mobile', { max: 20 }),
+  optionalString('position', { max: 100 }),
+  optionalString('department', { max: 100 }),
+  optionalString('designation', { max: 100 }),
+  optionalString('employeeCode', { max: 50 }),
+  optionalString('userRole', { max: 50 }),
+  optionalEnum('role', EMPLOYEE_ROLES),
   optionalNumber('salary', { min: 0 }),
-  optionalString('address', { max: 500 }),
+  optionalObject('salary'),
+  optionalObject('address'),
+  optionalString('gender', { max: 20 }),
+  optionalDate('doj'),
   optionalDate('joiningDate'),
+  optionalBoolean('isActive'),
+  optionalBoolean('hasLogin'),
+  optionalString('loginEmail', { max: 200 }),
+  optionalString('password', { max: 200 }),
   optionalString('emergencyContact', { max: 20 }),
+  optionalNumber('priority', { min: 0 }),
   validate,
 ];
 
 const updateEmployeeValidator = [
   optionalString('name', { max: 100 }),
   optionalEmail('email'),
-  optionalPhone('phone'),
+  optionalString('phone', { max: 20 }),
+  optionalString('mobile', { max: 20 }),
   optionalString('position', { max: 100 }),
+  optionalString('department', { max: 100 }),
+  optionalString('designation', { max: 100 }),
+  optionalString('employeeCode', { max: 50 }),
+  optionalString('userRole', { max: 50 }),
   optionalEnum('role', EMPLOYEE_ROLES),
   optionalNumber('salary', { min: 0 }),
-  optionalString('address', { max: 500 }),
+  optionalObject('salary'),
+  optionalObject('address'),
+  optionalString('gender', { max: 20 }),
+  optionalDate('doj'),
   optionalDate('joiningDate'),
-  optionalString('emergencyContact', { max: 20 }),
   optionalBoolean('isActive'),
+  optionalBoolean('hasLogin'),
+  optionalString('loginEmail', { max: 200 }),
+  optionalString('password', { max: 200 }),
+  optionalString('emergencyContact', { max: 20 }),
+  optionalNumber('priority', { min: 0 }),
   validate,
 ];
 

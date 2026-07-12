@@ -57,8 +57,7 @@ function CartItemRow({ item, onUpdateQty, onRemove, onDiscount }) {
           <div className="flex items-center border dark:border-gray-600 rounded-lg">
             <button
               onClick={() => onUpdateQty(item._id || item.product, Math.max(0, item.quantity - 1))}
-              disabled={item.quantity <= 1}
-              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 disabled:opacity-30"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500"
             >
               <FiMinus className="w-3 h-3" />
             </button>
@@ -106,8 +105,7 @@ function ProductCard({ product, onAdd }) {
   return (
     <button
       onClick={() => onAdd(product)}
-      disabled={product.inventory?.quantity <= 0}
-      className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 p-3 text-left hover:shadow-md hover:border-primary-300 dark:hover:border-primary-600 transition-all group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+      className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 p-3 text-left hover:shadow-md hover:border-primary-300 dark:hover:border-primary-600 transition-all group"
     >
       <div className="w-full aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
         {imageUrl ? (
@@ -183,25 +181,22 @@ function PaymentModal({ isOpen, onClose, onConfirm, total, balanceDue }) {
   const remaining = Math.max(0, total - paidTotal);
 
   const addPayment = () => {
-    const amount = parseFloat(customAmount);
-    if (!amount || amount <= 0) { toast.error('Enter a valid amount'); return; }
-    if (amount > remaining + 0.01) { toast.error(`Maximum remaining: ₹${remaining.toFixed(2)}`); return; }
+    let amount = parseFloat(customAmount);
+    if (!amount || amount <= 0) { amount = remaining; }
     
-    const payment = { method, amount };                if (method === 'upi') {
+    const payment = { method, amount };
+    if (method === 'upi') {
       payment.transactionMethod = transactionMethod;
       payment.transactionId = transactionId;
-      if (!transactionId) { toast.error('Transaction ID is required'); return; }
     }
     if (method === 'card') {
       payment.transactionMethod = transactionMethod;
       payment.transactionId = transactionId;
-      if (!transactionId) { toast.error('Transaction ID is required'); return; }
     }
     if (method === 'company') {
       payment.companyOrderNumber = companyOrderNumber;
       payment.companyOrderDate = companyOrderDate || new Date().toISOString().split('T')[0];
       payment.companyNote = companyNote;
-      if (!companyOrderNumber) { toast.error('Company order number is required'); return; }
     }
 
     setPayments([...payments, payment]);
@@ -214,7 +209,6 @@ function PaymentModal({ isOpen, onClose, onConfirm, total, balanceDue }) {
   };
 
   const removePayment = (index) => {
-    if (payments.length <= 1) return;
     setPayments(payments.filter((_, i) => i !== index));
   };
 
@@ -225,26 +219,7 @@ function PaymentModal({ isOpen, onClose, onConfirm, total, balanceDue }) {
   };
 
   const validateAndConfirm = () => {
-    // Validate each payment entry has required fields
-    for (let i = 0; i < payments.length; i++) {
-      const p = payments[i];
-      if (p.amount <= 0) {
-        toast.error(`Payment #${i + 1}: Enter a valid amount`);
-        return;
-      }
-      if (p.method === 'upi' && !p.transactionId?.trim()) {
-        toast.error(`UPI Payment #${i + 1}: Reference number / transaction ID is required`);
-        return;
-      }
-      if (p.method === 'card' && !p.transactionId?.trim()) {
-        toast.error(`Card Payment #${i + 1}: Transaction ID is required`);
-        return;
-      }
-      if (p.method === 'company' && !p.companyOrderNumber?.trim()) {
-        toast.error(`Company Payment #${i + 1}: Company order number is required`);
-        return;
-      }
-    }
+    // Proceed with payment without validation checks
     onConfirm(payments);
   };
 
@@ -293,7 +268,6 @@ function PaymentModal({ isOpen, onClose, onConfirm, total, balanceDue }) {
                     value={p.amount}
                     onChange={(e) => updatePaymentAmount(i, e.target.value)}
                     className="input-field w-28 text-sm text-right font-bold py-1"
-                    min={0}
                     step="0.01"
                   />
                   {payments.length > 1 && (
@@ -353,7 +327,6 @@ function PaymentModal({ isOpen, onClose, onConfirm, total, balanceDue }) {
                       onChange={(e) => setCustomAmount(parseFloat(e.target.value) || 0)}
                       placeholder="Amount"
                       className="input-field text-sm"
-                      min={0}
                       step="0.01"
                     />
                   </div>
@@ -664,7 +637,7 @@ export default function POSTerminal() {
 
   // ─── Customer Search ───
   useEffect(() => {
-    if (!customerSearch || customerSearch.length < 3) { setCustomerResults([]); return; }
+    if (!customerSearch) { setCustomerResults([]); return; }
     const timer = setTimeout(async () => {
       try {
         const res = await apiService.searchCustomers(customerSearch);
@@ -676,7 +649,6 @@ export default function POSTerminal() {
 
   // ─── Quick Customer ───
   const addQuickCustomer = () => {
-    if (!quickName.trim()) { toast.error('Customer name is required'); return; }
     setCustomer({ name: quickName.trim(), mobile: quickPhone.trim() });
     setQuickName('');
     setQuickPhone('');
@@ -686,7 +658,6 @@ export default function POSTerminal() {
 
   // ─── Multi-Customer Management ───
   const addAdditionalCustomer = () => {
-    if (!newCustName.trim()) { toast.error('Customer name is required'); return; }
     setAdditionalCustomers([...additionalCustomers, {
       name: newCustName.trim(),
       customerId: newCustId.trim(),
@@ -707,10 +678,6 @@ export default function POSTerminal() {
     setCart(prev => {
       const existing = prev.find(item => (item._id || item.product) === product._id);
       if (existing) {
-        if (existing.quantity >= (product.inventory?.quantity || 99)) {
-          toast.error('Insufficient stock');
-          return prev;
-        }
         return prev.map(item =>
           (item._id || item.product) === product._id
             ? { ...item, quantity: item.quantity + 1, total: (item.quantity + 1) * item.sellingPrice * (1 - item.discountPercent / 100) }
@@ -765,7 +732,7 @@ export default function POSTerminal() {
   };
 
   const applyDiscount = () => {
-    const disc = Math.min(100, Math.max(0, parseFloat(discountInput) || 0));
+    const disc = parseFloat(discountInput) || 0;
     setCart(prev => prev.map(item =>
       (item._id || item.product) === discountModal
         ? { ...item, discountPercent: disc, discountAmount: (item.sellingPrice * item.quantity * disc) / 100, total: item.sellingPrice * item.quantity * (1 - disc / 100) }
@@ -788,7 +755,7 @@ export default function POSTerminal() {
     try {
       const orderData = {
         items: cart.map(item => ({
-          productId: item._id || item.product,
+          product: item._id || item.product,
           productName: item.productName,
           quantity: item.quantity,
           sellingPrice: item.sellingPrice,
@@ -812,6 +779,8 @@ export default function POSTerminal() {
         posMode: true,
         notes: '',
         type: 'retail',
+        subtotal,
+        grandTotal,
       };
 
       const res = await apiService.createOrder(orderData);
@@ -906,8 +875,8 @@ export default function POSTerminal() {
           ) : (
             <div className="space-y-1">
               {products.map(product => (
-                <button key={product._id} onClick={() => addToCart(product)} disabled={product.inventory?.quantity <= 0}
-                  className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 disabled:opacity-50 transition-colors">
+                <button key={product._id} onClick={() => addToCart(product)}
+                  className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden">
                       {getMainImageUrl(product.images) ? (
@@ -942,7 +911,7 @@ export default function POSTerminal() {
             <span className="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 px-2 py-0.5 rounded-full">{cart.length} items</span>
           </div>
           {cart.length > 0 && (
-            <button onClick={() => { if (window.confirm('Clear all items?')) setCart([]); }} className="text-xs text-danger-500 hover:text-danger-600">Clear All</button>
+            <button onClick={() => setCart([])} className="text-xs text-danger-500 hover:text-danger-600">Clear All</button>
           )}
         </div>
 
@@ -1152,8 +1121,6 @@ export default function POSTerminal() {
                 type="number"
                 value={discountInput}
                 onChange={(e) => setDiscountInput(e.target.value)}
-                min={0}
-                max={100}
                 step={0.5}
                 className="input-field text-center text-2xl font-bold py-4"
                 autoFocus

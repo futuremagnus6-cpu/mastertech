@@ -75,8 +75,8 @@ export default function CustomersPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <div><h1 className="text-2xl font-bold">Customers</h1><p className="text-sm text-gray-500 mt-1">{total} total customers</p></div>
-        <button onClick={() => { setEditing(null); setModalOpen(true); }} className="btn-primary flex items-center gap-2"><FiPlus className="w-4 h-4" />Add Customer</button>
+        <div className="min-w-0"><h1 className="text-xl sm:text-2xl font-bold break-words">Customers</h1><p className="text-sm text-gray-500 mt-1">{total} total customers</p></div>
+        <button onClick={() => { setEditing(null); setModalOpen(true); }} className="btn-primary p-2 sm:px-4 flex items-center gap-1.5 sm:gap-2 flex-shrink-0"><FiPlus className="w-4 h-4" /><span className="hidden sm:inline">Add Customer</span></button>
       </div>
       <div className="mb-4 relative"><FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /><input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} placeholder="Search by name, mobile, email..." className="input-field pl-9 py-2.5" /></div>
       <div className="table-container">

@@ -198,22 +198,22 @@ export default function ShopAdminDashboard() {
     <div className="page-container">
       {/* Page Header */}
       <div className="page-header">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white break-words">
             Welcome, {user?.name?.split(' ')[0] || 'User'} 👋
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Here's what's happening with your business today.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={loadDashboard} disabled={loading} className="btn-secondary flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <button onClick={loadDashboard} disabled={loading} className="btn-secondary flex items-center gap-2 p-2 sm:px-4" title="Refresh">
             <FiRefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+            <span className="hidden sm:inline">Refresh</span>
           </button>
-          <Link to="/pos" className="btn-primary flex items-center gap-2">
+          <Link to="/pos" className="btn-primary flex items-center gap-2" title="Open POS">
             <FiShoppingCart className="w-4 h-4" />
-            Open POS
+            <span className="hidden sm:inline">Open POS</span>
           </Link>
         </div>
       </div>

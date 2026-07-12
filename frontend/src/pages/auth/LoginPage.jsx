@@ -89,7 +89,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right: Login Form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12 w-full">
         <div className="w-full max-w-md animate-fade-in">
           <div className="text-center mb-8 lg:hidden">
             <div className="w-14 h-14 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">

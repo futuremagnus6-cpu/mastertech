@@ -391,16 +391,18 @@ export default function OrdersPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <div><h1 className="text-2xl font-bold">Orders</h1><p className="text-sm text-gray-500 mt-1">{total} total orders</p></div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }} className="input-field w-auto text-sm py-2">
-            <option value="">All Status</option><option value="completed">Completed</option><option value="pending">Pending</option><option value="cancelled">Cancelled</option><option value="returned">Returned</option>
+        <div className="min-w-0"><h1 className="text-xl sm:text-2xl font-bold break-words">Orders</h1><p className="text-sm text-gray-500 mt-1">{total} total orders</p></div>
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap flex-shrink-0">
+          <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }} className="input-field text-xs sm:text-sm py-1.5 sm:py-2 min-w-0 max-w-[7rem] sm:max-w-none">
+            <option value="">Status</option><option value="completed">Completed</option><option value="pending">Pending</option><option value="cancelled">Cancelled</option><option value="returned">Returned</option>
           </select>
-          <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setPage(1); }} className="input-field w-auto text-sm py-2">
-            <option value="">All Payments</option><option value="completed">Completed</option><option value="partial">Partial</option><option value="pending">Pending</option>
+          <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setPage(1); }} className="input-field text-xs sm:text-sm py-1.5 sm:py-2 min-w-0 max-w-[7rem] sm:max-w-none">
+            <option value="">Payment</option><option value="completed">Completed</option><option value="partial">Partial</option><option value="pending">Pending</option>
           </select>
-          <input type="date" value={dateRange.start} onChange={e => setDateRange(d => ({ ...d, start: e.target.value }))} className="input-field w-auto text-sm py-2" />
-          <input type="date" value={dateRange.end} onChange={e => setDateRange(d => ({ ...d, end: e.target.value }))} className="input-field w-auto text-sm py-2" />
+          <div className="hidden sm:flex items-center gap-1.5">
+            <input type="date" value={dateRange.start} onChange={e => setDateRange(d => ({ ...d, start: e.target.value }))} className="input-field w-auto text-sm py-2" />
+            <input type="date" value={dateRange.end} onChange={e => setDateRange(d => ({ ...d, end: e.target.value }))} className="input-field w-auto text-sm py-2" />
+          </div>
         </div>
       </div>
       <div className="mb-4 relative"><FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /><input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} placeholder="Search by order number, customer name, mobile..." className="input-field pl-9 py-2.5" /></div>
@@ -412,7 +414,7 @@ export default function OrdersPage() {
           <tbody className="divide-y dark:divide-gray-700">
             {loading ? Array.from({ length: 8 }).map((_, i) => (<tr key={i}>{Array.from({ length: 8 }).map((_, j) => (<td key={j} className="table-cell"><div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" /></td>))}</tr>))
             : orders.length === 0 ? <tr><td colSpan={8} className="text-center py-12 text-gray-400"><FiPackage className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>No orders found</p></td></tr>
-            : orders.map(o => (<tr key={o._id} className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 ${o.isPartialPayment ? 'bg-warning-50/50 dark:bg-warning-900/10' : ''}`}>
+            : orders.map(o => (<tr key={o._id} className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 ${o.paymentStatus === 'partial' || o.paymentStatus === 'pending' ? 'bg-red-50 dark:bg-red-900/15 border-l-4 border-l-red-500' : ''}`}>
               <td className="table-cell">
                 <div className="font-medium text-gray-900 dark:text-white text-xs">{o.customerName || 'Walk-in'}</div>
                 {o.customerMobile && <span className="text-xs text-gray-500">{o.customerMobile}</span>}
@@ -446,10 +448,10 @@ export default function OrdersPage() {
               <td className="table-cell font-medium">₹{(o.grandTotal || 0).toLocaleString('en-IN')}</td>
               <td className="table-cell"><span className={statusColors[o.status]}>{o.status}</span></td>
               <td className="table-cell">
-                <span className={`${paymentColors[o.paymentStatus]} ${o.isPartialPayment ? 'flex items-center gap-1' : ''}`}>
-                  {o.isPartialPayment && <FiAlertCircle className="w-3 h-3 text-warning-500" />}
+                <span className={`${paymentColors[o.paymentStatus]} ${o.paymentStatus === 'partial' || o.paymentStatus === 'pending' ? 'flex items-center gap-1 ring-2 ring-red-400' : ''}`}>
+                  {o.paymentStatus === 'partial' || o.paymentStatus === 'pending' ? <FiAlertCircle className="w-3 h-3 text-red-600" /> : null}
                   {o.paymentStatus}
-                  {o.isPartialPayment && <span className="text-xs opacity-70">(₹{(o.balanceDue || 0).toFixed(0)})</span>}
+                  {o.paymentStatus === 'partial' && <span className="text-xs opacity-70">(₹{(o.balanceDue || 0).toFixed(0)})</span>}
                 </span>
               </td>
               <td className="table-cell text-right">

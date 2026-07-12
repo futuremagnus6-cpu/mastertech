@@ -3,8 +3,8 @@ const { validate } = require('../middleware/validate');
 const {
   requiredString, optionalString, requiredEmail, optionalEmail,
   requiredPhone, optionalPhone, requiredNumber, optionalNumber,
-  requiredDate, optionalDate, gstin, pan, pincode, requiredMongoId,
-  requiredArray, optionalArray, optionalInt,
+  optionalDate, pincode, optionalMongoId,
+  optionalArray, optionalInt,
   optionalEnum, optionalObject, optionalBoolean,
 } = require('./common.validators');
 
@@ -15,8 +15,8 @@ const createSupplierValidator = [
   optionalString('company', { max: 200 }),
   requiredPhone('mobile'),
   optionalEmail('email'),
-  gstin().optional({ values: 'null' }),
-  pan().optional({ values: 'null' }),
+  optionalString('gstin', { max: 50 }),
+  optionalString('pan', { max: 50 }),
   optionalString('address', { max: 500 }),
   optionalString('city', { max: 100 }),
   optionalString('state', { max: 100 }),
@@ -34,8 +34,8 @@ const updateSupplierValidator = [
   optionalString('company', { max: 200 }),
   optionalPhone('mobile'),
   optionalEmail('email'),
-  gstin().optional({ values: 'null' }),
-  pan().optional({ values: 'null' }),
+  optionalString('gstin', { max: 50 }),
+  optionalString('pan', { max: 50 }),
   optionalString('address', { max: 500 }),
   optionalString('city', { max: 100 }),
   optionalString('state', { max: 100 }),
@@ -55,19 +55,25 @@ const purchaseStatuses = ['draft', 'pending', 'ordered', 'received', 'cancelled'
 const purchasePaymentStatuses = ['pending', 'partial', 'paid'];
 
 const createPurchaseValidator = [
-  requiredMongoId('supplier'),
-  requiredDate('orderDate'),
+  optionalMongoId('supplier'),
+  optionalString('orderDate', { max: 50 }),
+  optionalString('invoiceDate', { max: 50 }),
+  optionalString('paymentDueDate', { max: 50 }),
   optionalDate('expectedDelivery'),
-  requiredArray('items', { minLen: 1 }),
+  optionalArray('items'),
   body('items.*.product')
-    .notEmpty().withMessage('Product ID is required')
-    .isMongoId().withMessage('Product must be a valid ObjectId'),
+    .optional({ values: 'null' })
+    .trim()
+    .isString()
+    .isLength({ max: 100 })
+    .withMessage('Product ID must be a string of max 100 characters'),
   body('items.*.quantity')
-    .isFloat({ min: 0.001 }).withMessage('Quantity must be at least 0.001')
+    .optional({ values: 'null' })
     .toFloat(),
   body('items.*.unitPrice')
-    .isFloat({ min: 0 }).withMessage('Unit price must be non-negative')
+    .optional({ values: 'null' })
     .toFloat(),
+  optionalString('invoiceNumber', { max: 100 }),
   optionalNumber('discount', { min: 0 }),
   optionalNumber('shippingCost', { min: 0 }),
   optionalNumber('taxAmount', { min: 0 }),

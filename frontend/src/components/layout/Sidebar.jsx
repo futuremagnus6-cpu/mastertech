@@ -115,15 +115,25 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Bottom section */}
       <div className="border-t dark:border-gray-700 p-2">
-        {/* Collapse toggle */}
+        {/* Collapse toggle - hidden on mobile */}
         <button
           onClick={onToggle}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ${
+          className={`hidden lg:flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ${
             collapsed ? 'justify-center' : ''
           }`}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           <FiChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
           {!collapsed && <span>Collapse</span>}
+        </button>
+        
+        {/* Close button on mobile */}
+        <button
+          onClick={onToggle}
+          className="lg:hidden w-full flex items-center justify-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+        >
+          <FiChevronLeft className="w-4 h-4 rotate-180" />
+          <span>Close Menu</span>
         </button>
       </div>
     </aside>

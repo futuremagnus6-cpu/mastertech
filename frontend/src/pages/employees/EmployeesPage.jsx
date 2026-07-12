@@ -50,8 +50,6 @@ function EmployeeModal({ isOpen, onClose, employee, onSaved }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.mobile) { toast.error('Name and mobile required'); return; }
-    if (form.hasLogin && !form.loginEmail) { toast.error('Login email is required when login is enabled'); return; }
     setSaving(true);
     try {
       const payload = { ...form };
@@ -75,9 +73,9 @@ function EmployeeModal({ isOpen, onClose, employee, onSaved }) {
           {/* Basic Info */}
           <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Basic Information</h4>
           <div className="grid grid-cols-2 gap-3">
-            <div className="col-span-2"><label className="block text-xs font-medium mb-1">Name *</label><input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="input-field text-sm" required /></div>
+            <div className="col-span-2"><label className="block text-xs font-medium mb-1">Name</label><input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="input-field text-sm" /></div>
             <div><label className="block text-xs font-medium mb-1">Employee Code</label><input type="text" value={form.employeeCode} onChange={e => setForm(f => ({ ...f, employeeCode: e.target.value }))} className="input-field text-sm" /></div>
-            <div><label className="block text-xs font-medium mb-1">Mobile *</label><input type="text" value={form.mobile} onChange={e => setForm(f => ({ ...f, mobile: e.target.value }))} className="input-field text-sm" required /></div>
+            <div><label className="block text-xs font-medium mb-1">Mobile</label><input type="text" value={form.mobile} onChange={e => setForm(f => ({ ...f, mobile: e.target.value }))} className="input-field text-sm" /></div>
             <div><label className="block text-xs font-medium mb-1">Email</label><input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="input-field text-sm" /></div>
             <div><label className="block text-xs font-medium mb-1">Department</label>
               <select value={form.department} onChange={e => setForm(f => ({ ...f, department: e.target.value }))} className="input-field text-sm">
@@ -108,7 +106,7 @@ function EmployeeModal({ isOpen, onClose, employee, onSaved }) {
                   <label className="block text-xs font-medium mb-1">Login Email *</label>
                   <div className="relative">
                     <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input type="email" value={form.loginEmail} onChange={e => setForm(f => ({ ...f, loginEmail: e.target.value }))} className="input-field text-sm pl-9" placeholder="employee@shop.com" required />
+                    <input type="email" value={form.loginEmail} onChange={e => setForm(f => ({ ...f, loginEmail: e.target.value }))} className="input-field text-sm pl-9" placeholder="employee@shop.com" />
                   </div>
                 </div>
                 <div className="col-span-2">
@@ -129,7 +127,7 @@ function EmployeeModal({ isOpen, onClose, employee, onSaved }) {
                   <label className="block text-xs font-medium mb-1">
                     <FiStar className="w-3 h-3 inline mr-0.5" /> Priority
                   </label>
-                  <input type="number" value={form.priority} onChange={e => setForm(f => ({ ...f, priority: parseInt(e.target.value) || 0 }))} className="input-field text-sm" min={0} max={100} />
+                  <input type="number" value={form.priority} onChange={e => setForm(f => ({ ...f, priority: parseInt(e.target.value) || 0 }))} className="input-field text-sm" />
                   <p className="text-[10px] text-gray-400 mt-0.5">0-100. Higher = more important</p>
                 </div>
               </div>
